@@ -1,0 +1,25 @@
+[project]
+name = "data-extraction-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.143.0",
+    "google-genai>=2.30.1",
+    "openai>=3.31.0",
+    "paddleocr>=3.7.0",
+    "paddlepaddle>=3.3.1",
+    "pydantic>=2.14.0",
+    "pydantic-settings>=2.15.0",
+    "pytesseract>=0.3.13",
+    "python-multipart>=0.0.32",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+data-extraction-project = "data_extraction_project:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"

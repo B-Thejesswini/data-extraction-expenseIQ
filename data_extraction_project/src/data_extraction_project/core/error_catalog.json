@@ -1,0 +1,30 @@
+{
+  "UNSUPPORTED_FILE_TYPE": {
+    "status": 415,
+    "message": "Unsupported file type '{suffix}'. Allowed: {allowed}"
+  },
+  "FILE_TOO_LARGE": {
+    "status": 413,
+    "message": "File exceeds the maximum size of {max_mb} MB"
+  },
+  "EMPTY_FILE": {
+    "status": 400,
+    "message": "The uploaded file is empty"
+  },
+  "INVALID_IMAGE": {
+    "status": 422,
+    "message": "The uploaded file could not be read as an image"
+  },
+  "EXTRACTION_FAILED": {
+    "status": 502,
+    "message": "Receipt extraction failed. Please try again later"
+  },
+  "INVALID_REQUEST": {
+    "status": 422,
+    "message": "Invalid request: {details}"
+  },
+  "INTERNAL_ERROR": {
+    "status": 500,
+    "message": "An unexpected error occurred"
+  }
+}
