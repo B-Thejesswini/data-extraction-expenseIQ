@@ -24,6 +24,7 @@ async def gemini_extract_from_img(
     file: UploadFile = File(...),
     service: GeminiService = Depends(get_gemini_service),
 ) -> ExtractionResponse:
+    """ extract receipt data directly from an image via Gemini"""
     content = await file.read()
     return await service.extract(file.filename or "upload", content)
 
@@ -36,6 +37,7 @@ async def gemini_markdown_extract(
     file: UploadFile = File(...),
     service: GeminiService = Depends(get_gemini_service),
 ) -> ExtractionResponse:
+    """ extract receipt data from markdown via Gemini"""
     content = await file.read()
     return await service.extract_markdown(file.filename or "upload", content)
 
@@ -47,4 +49,5 @@ async def gemini_pdf_extract(
     pdf_path: Path = Depends(uploaded_pdf),
     service: PdfExtractionService = Depends(get_pdf_extraction_service),
 ) -> ExtractionResponse:
+    """ extract receipt data directly from a PDF via Gemini """
     return await service.extract(pdf_path)

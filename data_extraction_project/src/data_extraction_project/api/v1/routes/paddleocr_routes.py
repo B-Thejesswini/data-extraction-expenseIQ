@@ -13,5 +13,6 @@ async def paddleocr_extract(
     file: UploadFile = File(...),
     service: PaddleOCRService = Depends(get_ocr_service),
 ) -> OCRResponse:
+    """ extract receipt data directly from an image via Gemini"""
     content = await file.read()
     return await run_in_threadpool(service.extract, file.filename or "upload", content)

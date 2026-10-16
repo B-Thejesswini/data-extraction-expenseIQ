@@ -15,5 +15,7 @@ async def pdf_to_markdown(
     pdf_path: Path = Depends(uploaded_pdf),
     service: PdfToMarkdownService = Depends(get_pdf_to_markdown_service),
 ) -> MarkdownResponse:
+    """ Uses pymupdf to parse a pdf into markdown
+    """
     markdown = await run_in_threadpool(service.convert, pdf_path)
     return MarkdownResponse(markdown=markdown)

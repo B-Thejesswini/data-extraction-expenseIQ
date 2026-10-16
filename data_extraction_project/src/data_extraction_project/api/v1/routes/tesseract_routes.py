@@ -13,5 +13,9 @@ async def tesseract_extract(
     file: UploadFile = File(...),
     service: TesseractService = Depends(get_tesseract_service),
 ) -> TesseractResponse:
+    """ extract content from an image through tesseract
+    
+    returns the extracted content + confidence
+    """
     content = await file.read()
     return await run_in_threadpool(service.extract, file.filename or "upload", content)

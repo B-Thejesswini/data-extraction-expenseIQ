@@ -17,6 +17,18 @@ from data_extraction_project.core.config import settings
 
 class TesseractService:
     def __init__(self, results_dir: Path = settings.tesseract_results_dir, psm: int = settings.tesseract_psm) -> None:
+        """Create the output folder and configure Tesseract.
+
+        Requires the Tesseract binary to be installed on the machine, since
+        `pytesseract` is only a wrapper around it.
+
+        Args:
+            results_dir: Folder where annotated images, preprocessed images and raw JSON
+                are saved. Created if it does not exist.
+            psm: Tesseract page segmentation mode. 6 treats the image as a single uniform
+                block of text, which suits most receipts. Try 4 (single column, variable
+                font sizes) if a layout confuses it.
+        """
         self._results_dir = results_dir
         self._results_dir.mkdir(parents=True, exist_ok=True)
         # PSM 6: single uniform block of text. Try 4 for single-column,
@@ -24,6 +36,32 @@ class TesseractService:
         self._config = f"--psm {psm}"
 
     def extract(self, filename: str, content: bytes) -> TesseractResponse:
+        """Run Tesseract OCR on an uploaded image and save the artifacts.
+
+        Blocking, so call it from a worker thread rather than directly on the event
+        loop. Unlike PaddleOCR there is no shared model state, so concurrent calls are
+        safe. Each call saves three files to `results_dir`, sharing a timestamp:
+        `<name>_res_img_<ts>.jpg` (word boxes drawn on the image, red when confidence is
+        below `tesseract_low_conf_threshold` and green otherwise),
+        `<name>_preprocessed_img_<ts>.jpg` (the RGB-converted input, since no other
+        preprocessing is applied), and `<name>_<ts>_.json` (text, confidences, and the
+        raw Tesseract output including box coordinates).
+
+        Args:
+            filename: Original upload name, used for the file type and output names.
+                Characters other than letters, digits, `_` and `-` are replaced with `_`.
+            content: Raw image bytes.
+
+        Returns:
+            The recognized words and their confidence scores, in matching order.
+            Confidence is on a 0 to 100 scale, unlike PaddleOCR's 0 to 1. Empty words
+            and regions Tesseract marks as non-text are skipped.
+
+        Raises:
+            UnsupportedFileTypeError: Extension is not in `IMAGE_EXTS`.
+            PIL.UnidentifiedImageError: The content is not a readable image. This is not
+                yet mapped to `InvalidImageError`, so it currently surfaces as a 500.
+        """
         suffix = Path(filename).suffix.lower()
         if suffix not in IMAGE_EXTS:
             raise UnsupportedFileTypeError(

@@ -15,5 +15,6 @@ async def groq_extract(
     file: UploadFile = File(...),
     service: GroqService = Depends(get_groq_service),
 ) -> ExtractionResponse:
+    """ extract receipt data directly from an image via Groq's qwen model"""
     content = await file.read()
     return await service.extract(file.filename or "upload", content)
