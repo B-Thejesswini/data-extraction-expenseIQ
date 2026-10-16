@@ -26,5 +26,21 @@
   "INTERNAL_ERROR": {
     "status": 500,
     "message": "An unexpected error occurred"
+  },
+    "INVALID_PDF": {
+    "status": 422,
+    "message": "The uploaded file is not a valid PDF"
+  },
+  "PDF_NO_TEXT": {
+    "status": 422,
+    "message": "No text could be extracted. The PDF may be scanned or image-only"
+  },
+  "PDF_CONVERSION_FAILED": {
+    "status": 500,
+    "message": "PDF conversion failed. Please try again later"
+  },
+  "INVALID_TEXT_FILE": {
+    "status": 422,
+    "message": "The uploaded file is not valid UTF-8 text"
   }
 }

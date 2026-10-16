@@ -84,3 +84,17 @@ class InvalidRequestError(AppError):
 
 class InternalError(AppError):
     code = "INTERNAL_ERROR"
+
+class InvalidPdfError(AppError):
+    code = "INVALID_PDF"
+
+
+class PdfNoTextError(AppError):
+    code = "PDF_NO_TEXT"
+
+
+class PdfConversionFailedError(AppError):
+    code = "PDF_CONVERSION_FAILED"
+
+class InvalidTextFileError(AppError):
+    code = "INVALID_TEXT_FILE"
