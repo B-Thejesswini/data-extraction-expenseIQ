@@ -9,6 +9,7 @@ from data_extraction_project.api.v1.exception_handlers import register_exception
 
 from data_extraction_project.api.v1.routes.gemini_routes import router as gemini_router
 from data_extraction_project.api.v1.routes.groq_routes import router as groq_router
+from data_extraction_project.api.v1.routes.pdf_markdown_routes import router as pdf_markdown_router
 from data_extraction_project.api.v1.routes.paddleocr_routes import router as paddleocr_router
 from data_extraction_project.api.v1.routes.tesseract_routes import router as tesseract_router
 from data_extraction_project.api.v1.deps import get_ocr_service
@@ -41,6 +42,8 @@ def create_app() -> FastAPI:
     app.include_router(gemini_router, prefix="/api/v1")
 
     app.include_router(groq_router, prefix="/api/v1")
+
+    app.include_router(pdf_markdown_router, prefix="/api/v1")
 
     @app.get("/health", tags=["health"])
     async def health() -> dict[str, str]:

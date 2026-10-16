@@ -24,6 +24,14 @@ class Settings(BaseSettings):
     groq_model: str = "qwen/qwen3.8-27b"
     groq_base_url: str
 
+    markdown_results_dir: Path = BASE_DIR / "extraction_results" / "markdown"
+
+    max_markdown_mb: int = 1  # ~1 MB of text is roughly 250k tokens, well inside Gemini's context
+
+    @property
+    def max_markdown_bytes(self) -> int:
+        return self.max_markdown_mb * 1024 * 1024
+
     @property
     def paddleocr_results_dir(self) -> Path:
         return self.results_dir / "paddleocr"

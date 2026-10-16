@@ -5,7 +5,7 @@ from google.genai import types
 from pydantic import ValidationError
 
 from data_extraction_project.core.exceptions import ExtractionFailedError
-from data_extraction_project.llm.prompts.gemini_extraction_prompt import EXTRACTION_PROMPT
+from data_extraction_project.llm.prompts.gemini_extraction_prompt import EXTRACTION_PROMPT, MARKDOWN_EXTRACTION_PROMPT
 from data_extraction_project.schemas.vlm_extraction_schema import ReceiptExtraction
 
 logger = logging.getLogger(__name__)
@@ -17,13 +17,20 @@ class GeminiClient:
         self.model = model
 
     async def extract_receipt(self, image_bytes: bytes, mime_type: str) -> ReceiptExtraction:
+        return await self._generate(
+            [EXTRACTION_PROMPT, types.Part.from_bytes(data=image_bytes, mime_type=mime_type)]
+        )
+
+    async def extract_receipt_from_text(self, text: str) -> ReceiptExtraction:
+        return await self._generate(
+            [MARKDOWN_EXTRACTION_PROMPT, f"<document>\n{text}\n</document>"]
+        )
+
+    async def _generate(self, contents: list[str | types.Part]) -> ReceiptExtraction:
         try:
             response = await self._client.aio.models.generate_content(
                 model=self.model,
-                contents=[
-                    EXTRACTION_PROMPT,
-                    types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-                ],
+                contents=contents,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     response_schema=ReceiptExtraction,

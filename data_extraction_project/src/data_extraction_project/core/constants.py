@@ -29,4 +29,8 @@ GROQ_IMAGE_MIME_TYPES = {
     ".webp": "image/webp",
 }
 
+PDF_EXTS = frozenset({".pdf"})
+PDF_MAGIC = b"%PDF-"
+MIN_MARKDOWN_CHARS = 20  # below this, the PDF is almost certainly scanned/image-only
 
+MARKDOWN_EXTS = frozenset({".md", ".markdown"})
