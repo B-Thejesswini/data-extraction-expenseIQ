@@ -23,10 +23,42 @@ _PROMPT = (
 
 class GroqClient:
     def __init__(self, api_key: str, model: str) -> None:
+        """Create the Groq API client.
+
+        Groq exposes an OpenAI-compatible API, so this uses the async OpenAI SDK pointed
+        at `settings.groq_base_url`. A single instance is meant to be shared across
+        services.
+
+        Args:
+            api_key: Groq API key.
+            model: Vision-capable model name used for every request. Also exposed as the
+                public `model` attribute.
+        """
         self._client = AsyncOpenAI(base_url=settings.groq_base_url, api_key=api_key)
         self.model = model
 
     async def extract_receipt(self, image_bytes: bytes, mime_type: str) -> ReceiptExtraction:
+        """Extract receipt data from an image.
+
+        The image is sent inline as a base64 data URI, which inflates its size by about
+        33%, so the caller must keep the raw file under Groq's limit. JSON mode only
+        guarantees syntactically valid JSON, not the field names, so the prompt includes
+        the `ReceiptExtraction` schema and the response is validated against it.
+        Temperature is 0 for repeatable results. Details of any failure are logged and
+        never exposed to the caller.
+
+        Args:
+            image_bytes: Raw image bytes.
+            mime_type: MIME type of the image, such as `image/jpeg`. It must be a format
+                Groq accepts.
+
+        Returns:
+            The parsed and validated receipt data.
+
+        Raises:
+            ExtractionFailedError: The request failed, Groq returned no content, or the
+                output did not match `ReceiptExtraction`.
+        """
         data_uri = f"data:{mime_type};base64,{base64.b64encode(image_bytes).decode()}"
 
         try:
