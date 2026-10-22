@@ -1,3 +1,5 @@
+# dependencies
+
 from functools import lru_cache
 
 from data_extraction_project.llm.providers.gemini_client import GeminiClient

@@ -12,6 +12,7 @@ from data_extraction_project.api.v1.routes.groq_routes import router as groq_rou
 from data_extraction_project.api.v1.routes.pdf_markdown_routes import router as pdf_markdown_router
 from data_extraction_project.api.v1.routes.paddleocr_routes import router as paddleocr_router
 from data_extraction_project.api.v1.routes.tesseract_routes import router as tesseract_router
+from data_extraction_project.api.v1.routes.health_routes import router as health_router
 from data_extraction_project.api.v1.deps import get_ocr_service
 
 import uvicorn
@@ -45,9 +46,7 @@ def create_app() -> FastAPI:
 
     app.include_router(pdf_markdown_router, prefix="/api/v1")
 
-    @app.get("/health", tags=["health"])
-    async def health() -> dict[str, str]:
-        return {"status": "ok"}
+    app.include_router(health_router, prefix="/api/v1")
 
     # Include routers here, e.g.:
     # from project_name.api.v1.routes import router as v1_router
