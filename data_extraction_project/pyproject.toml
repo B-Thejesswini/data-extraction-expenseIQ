@@ -17,6 +17,7 @@ dependencies = [
     "pymupdf4llm>=1.28.2",
     "pytesseract>=0.3.13",
     "python-multipart>=0.0.32",
+    "sqlalchemy[asyncio]>=2.1.4",
     "uvicorn>=0.54.0",
 ]
 

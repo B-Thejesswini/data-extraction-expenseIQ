@@ -21,9 +21,17 @@
           "*": "deny",
           "~/.opencode/plan/*": "allow"
         },
+        "read": {
+          "*.env": "deny",
+          "*.env.*": "deny"
+        },
         "shell": "ask",
         "bash": {
           "*": "ask",
+          "rm *": "deny",
+          "rmdir *": "deny",
+          "unlink *": "deny",
+          "git clean *": "deny",
           "git commit*": "deny",
           "git push*": "deny",
           "git pull*": "deny"
