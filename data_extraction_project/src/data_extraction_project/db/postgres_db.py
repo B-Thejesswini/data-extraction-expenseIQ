@@ -1,7 +1,5 @@
-from collections.abc import AsyncGenerator
-
 from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
 from data_extraction_project.core.config import settings
@@ -44,8 +42,3 @@ AsyncSessionLocal = async_sessionmaker(
     expire_on_commit=False,
 )
 
-
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """FastAPI dependency: one session per request."""
-    async with AsyncSessionLocal() as session:
-        yield session
