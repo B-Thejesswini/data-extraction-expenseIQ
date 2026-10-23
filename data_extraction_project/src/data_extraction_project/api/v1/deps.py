@@ -23,7 +23,16 @@ from fastapi import File, UploadFile
 
 from data_extraction_project.services.pdf_markdown_service import PdfToMarkdownService
 
+from data_extraction_project.db.postgres_db import AsyncSessionLocal
 
+async def get_async_db():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
 
 @lru_cache
 def get_ocr_service() -> PaddleOCRService:

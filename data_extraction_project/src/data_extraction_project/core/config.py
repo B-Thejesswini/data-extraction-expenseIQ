@@ -28,6 +28,19 @@ class Settings(BaseSettings):
 
     max_markdown_mb: int = 1  # ~1 MB of text is roughly 250k tokens, well inside Gemini's context
 
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_PORT: int = 5432
+ 
+    @property
+    def DATABASE_URL(self) -> str:
+        # async driver, used by the FastAPI app and by Alembic's async env.py
+        return (
+            f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        )
     @property
     def max_markdown_bytes(self) -> int:
         return self.max_markdown_mb * 1024 * 1024
